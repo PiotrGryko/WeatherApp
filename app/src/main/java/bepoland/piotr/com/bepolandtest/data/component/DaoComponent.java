@@ -1,5 +1,8 @@
 package bepoland.piotr.com.bepolandtest.data.component;
 
+import android.content.SharedPreferences;
+import android.location.Geocoder;
+
 import javax.inject.Singleton;
 
 import bepoland.piotr.com.bepolandtest.data.module.AppModule;
@@ -19,5 +22,7 @@ public interface DaoComponent {
     //void inject(MainActivity activity);
     //DAO needs to be exposed for CityListComponent
     DAO dao();
+    SharedPreferences sharedPreferences();
+    Geocoder geocoder();
 
 }

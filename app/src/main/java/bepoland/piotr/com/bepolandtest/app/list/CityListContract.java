@@ -13,7 +13,6 @@ public interface CityListContract {
     interface View {
         void publishData(ModelCity[] cities);
         void showDetails(ModelCity city, ImageView image);
-
     }
 
     interface Presenter {

@@ -46,7 +46,7 @@ public class DaoModule {
     @Provides
     @Named("baseUrl")
     String provideBaseUrl() {
-        return "http://openweathermap.org/api";
+        return "http://api.openweathermap.org/data/2.5/";
     }
 
     @Provides

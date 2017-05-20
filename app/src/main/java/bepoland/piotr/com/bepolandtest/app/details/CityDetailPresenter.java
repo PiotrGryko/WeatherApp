@@ -1,11 +1,14 @@
 package bepoland.piotr.com.bepolandtest.app.details;
 
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
+import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.util.DAO;
 
 /**
@@ -24,18 +27,21 @@ public class CityDetailPresenter implements CityDetailContract.Presenter {
     }
 
     @Override
-    public void loadData(ModelCity user) {
-        /*
-        dao.loadUserDetails(user, new Response.Listener<ModelUser>() {
+    public void loadData(ModelCity city) {
+        dao.loadWeather(city.getLatLng(), new Response.Listener<ModelWeather>() {
+
             @Override
-            public void onResponse(ModelUser response) {
+            public void onResponse(ModelWeather response) {
+                Log.d("xxx","result ");
                 contractView.publishData(response);
             }
         }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d("XXX",error.toString());
             }
         });
-    */
+
     }
 }

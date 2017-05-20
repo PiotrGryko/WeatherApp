@@ -1,8 +1,13 @@
 package bepoland.piotr.com.bepolandtest.app.map;
 
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +15,35 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.inject.Inject;
+
+import bepoland.piotr.com.bepolandtest.App;
 import bepoland.piotr.com.bepolandtest.R;
+import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 
 /**
  * Created by piotr on 20/05/17.
  */
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements MapContract.View {
 
     private MapView mapView;
     private GoogleMap gMap;
+    @Inject
+    MapPresenter presenter;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        DaggerMapComponent.builder().daoComponent(((App) getActivity().getApplication())
+                .getDaoComponent()).mapModule(new MapModule(this)).build().inject(this);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_map, parent, false);
@@ -30,27 +54,54 @@ public class MapFragment extends Fragment {
 
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
-                    gMap = googleMap;
+                    initGoogleMap(googleMap);
+                    presenter.loadData();
                 }
             });
         }
         return v;
     }
+
+    private void initGoogleMap(GoogleMap googleMap) {
+        this.gMap = googleMap;
+        this.gMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                presenter.addLocation(latLng);
+                presenter.loadData();
+            }
+        });
+    }
+
+    @Override
+    public void publishData(ModelCity[] data) {
+        this.gMap.clear();
+
+        for (int i = 0; i < data.length; i++) {
+            this.gMap.addMarker(new MarkerOptions().position(data[i].getLatLng()));
+        }
+    }
+
     @Override
     public void onResume() {
         mapView.onResume();
         super.onResume();
     }
+
     @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
     }
+
     @Override
     public void onLowMemory() {
         super.onLowMemory();

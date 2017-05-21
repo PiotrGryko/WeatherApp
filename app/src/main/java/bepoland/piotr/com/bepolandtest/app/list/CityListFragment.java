@@ -10,14 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import javax.inject.Inject;
-
-import bepoland.piotr.com.bepolandtest.App;
 import bepoland.piotr.com.bepolandtest.BaseFragment;
 import bepoland.piotr.com.bepolandtest.R;
 import bepoland.piotr.com.bepolandtest.app.details.CityDetailFragment;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
-import bepoland.piotr.com.bepolandtest.data.component.AppComponent;
 import bepoland.piotr.com.bepolandtest.databinding.FragmentListBinding;
 
 /**
@@ -25,16 +21,14 @@ import bepoland.piotr.com.bepolandtest.databinding.FragmentListBinding;
  */
 public class CityListFragment extends BaseFragment implements CityListContract.View {
 
-    @Inject
-    CityListPresenter fragmentListPresenter;
+
+    private CityListPresenter fragmentListPresenter;
     private FragmentListBinding fragmentListBinding;
     private CityListAdapter adapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppComponent appComponent = ((App) getActivity().getApplication()).getAppComponent();
-        DaggerCityListComponent.builder().appComponent(appComponent).cityListModule(new
-                CityListModule(this)).build().inject(this);
+        fragmentListPresenter = new CityListPresenter(getMyApplication().provideDatabaseHelper(),this);
         adapter = new CityListAdapter(new ModelCity[0]);
         fragmentListPresenter.loadData();
     }

@@ -1,20 +1,18 @@
 package bepoland.piotr.com.bepolandtest.app.model;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.databinding.BindingAdapter;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.Locale;
 
 import bepoland.piotr.com.bepolandtest.app.database.CitiesDatabase;
+import bepoland.piotr.com.bepolandtest.util.DownloadImageTask;
 
 /**
  * Created by piotr on 20/05/17.
@@ -93,9 +91,7 @@ public class ModelCity implements Serializable {
     public static void setImageUrl(ImageView view, String imageUrl) {
         if (imageUrl == null || imageUrl.trim().equals(""))
             return;
-        Picasso.with(view.getContext())
-                .load(imageUrl)
-                .into(view);
+        new DownloadImageTask(view,imageUrl).start();
     }
 
     public static ModelCity valueOf(Cursor cursor)

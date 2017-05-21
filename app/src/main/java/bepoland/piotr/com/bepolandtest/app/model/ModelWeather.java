@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +14,7 @@ import java.util.Locale;
 
 import bepoland.piotr.com.bepolandtest.R;
 import bepoland.piotr.com.bepolandtest.app.database.CitiesDatabase;
+import bepoland.piotr.com.bepolandtest.util.DownloadImageTask;
 
 /**
  * Created by piotr on 20/05/17.
@@ -131,7 +131,7 @@ public class ModelWeather {
     @BindingAdapter("imageUrl")
     public static void setImageUrl(ImageView view, String imageUrl) {
         if (imageUrl == null || imageUrl.equals("")) return;
-        Picasso.with(view.getContext()).load(imageUrl).into(view);
+        new DownloadImageTask(view,imageUrl).start();
     }
 
     public static ModelWeather valueOf(Cursor cursor) {

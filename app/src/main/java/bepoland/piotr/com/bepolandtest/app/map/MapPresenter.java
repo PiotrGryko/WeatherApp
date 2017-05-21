@@ -1,28 +1,18 @@
 package bepoland.piotr.com.bepolandtest.app.map;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
-import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
-
-import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.util.DAO;
+import bepoland.piotr.com.bepolandtest.util.HttpRequestTask;
 
 /**
  * Created by piotr on 20/05/17.
@@ -34,13 +24,12 @@ public class MapPresenter implements MapContract.Presenter {
     private final DAO dao;
     private final DatabaseHelper databaseHelper;
 
-    @Inject
-    public MapPresenter(MapContract.View view,  Geocoder
-            geocoder, DAO dao,DatabaseHelper databaseHelper) {
+    public MapPresenter(MapContract.View view, Geocoder
+            geocoder, DAO dao, DatabaseHelper databaseHelper) {
         this.view = view;
         this.geocoder = geocoder;
         this.dao = dao;
-        this.databaseHelper=databaseHelper;
+        this.databaseHelper = databaseHelper;
     }
 
     @Override
@@ -57,21 +46,18 @@ public class MapPresenter implements MapContract.Presenter {
             e.printStackTrace();
         }
         final ModelCity city = new ModelCity(position, cityName);
-        dao.loadWeather(position, new Response.Listener<ModelWeather>() {
+        dao.loadWeather(position, new HttpRequestTask.OnRequestListener<ModelWeather>() {
 
             @Override
-            public void onResponse(ModelWeather response) {
-                city.setWeather(response);
+            public void onSuccess(ModelWeather data) {
+                city.setWeather(data);
                 databaseHelper.saveCity(city);
                 view.locationAdded();
-
                 loadData();
-
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onError(Exception error) {
                 view.locationError();
             }
         });

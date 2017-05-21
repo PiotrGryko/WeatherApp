@@ -1,12 +1,6 @@
 package bepoland.piotr.com.bepolandtest.util;
 
-import android.util.Log;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -20,22 +14,14 @@ import java.util.Iterator;
 /**
  * Created by piotr on 11/05/17.
  */
-public class GsonRequest<T> extends Request<T> {
+public class GsonRequest<T> extends HttpRequestTask{
 
     private final Gson gson = new Gson();
     private final Class<T> clazz;
-    private final Response.Listener<T> listener;
 
-    public GsonRequest(int method, String url, Class<T> clazz, Response.Listener<T> listener,
-                       Response.ErrorListener errorListener) {
-        super(method, url, errorListener);
+    public GsonRequest(String url, Class<T> clazz, OnRequestListener onRequestListener) {
+        super( url,onRequestListener);
         this.clazz = clazz;
-        this.listener = listener;
-    }
-
-    @Override
-    protected void deliverResponse(T response) {
-        listener.onResponse(response);
     }
 
     /**
@@ -81,20 +67,15 @@ public class GsonRequest<T> extends Request<T> {
         return result.toString();
     }
 
-    @Override
-    protected Response<T> parseNetworkResponse(NetworkResponse response) {
-        try {
-            String json = new String(
-                    response.data,
-                    HttpHeaderParser.parseCharset(response.headers));
-            json = deserialize(json);
-            return Response.success(
-                    gson.fromJson(json, clazz),
-                    HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
-        } catch (JsonSyntaxException e) {
-            return Response.error(new ParseError(e));
-        }
+    public String parseNetworkResponse(String data)
+    {
+        return deserialize(data);
     }
+
+    @Override
+    public T deliverResponse(String response) {
+        return gson.fromJson(response, clazz);
+    }
+
+
 }

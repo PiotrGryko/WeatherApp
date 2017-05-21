@@ -2,18 +2,12 @@ package bepoland.piotr.com.bepolandtest.util;
 
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 
 /**
@@ -21,30 +15,26 @@ import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
  */
 public class DAO {
 
-    private RequestQueue requestQueue;
     private String baseUrl;
     private final String API_KEY = "c6e381d8c7ff98f0fee43775817cf6ad";
 
-    public DAO(RequestQueue requestQueue, String baseUrl) {
-        this.requestQueue = requestQueue;
+    public DAO(String baseUrl) {
         this.baseUrl = baseUrl;
     }
 
-    public void loadWeather(LatLng position, Response.Listener<ModelWeather> successListener,
-                            Response.ErrorListener errorListener) {
+    public void loadWeather(LatLng position, HttpRequestTask.OnRequestListener<ModelWeather> successListener) {
         String url = baseUrl + "weather?lat=" + position.latitude + "&lon=" + position.longitude +
                 "&appid=" + API_KEY + "&units=metric";
-        GsonRequest<ModelWeather> request = new GsonRequest<ModelWeather>(Request.Method.GET,
-                url, ModelWeather.class, successListener, errorListener);
-        requestQueue.add(request);
+        Log.d("XXX","load weather "+url);
+        GsonRequest<ModelWeather> request = new GsonRequest<ModelWeather>(
+                url, ModelWeather.class, successListener);
+        request.execute();
     }
 
-    public void loadForecast(LatLng position, Response.Listener<ModelWeather[]> successListener,
-                             Response.ErrorListener errorListener) {
+    public void loadForecast(LatLng position, HttpRequestTask.OnRequestListener<ModelWeather[]> successListener) {
         String url = baseUrl + "forecast?lat=" + position.latitude + "&lon=" + position.longitude +
                 "&appid=" + API_KEY + "&units=metric";
-        GsonRequest<ModelWeather[]> request = new GsonRequest<ModelWeather[]>(Request.Method.GET,
-                url, ModelWeather[].class, successListener, errorListener) {
+        GsonRequest<ModelWeather[]> request = new GsonRequest<ModelWeather[]>(url, ModelWeather[].class, successListener) {
 
             public String deserialize(String data) {
                 JSONArray result = new JSONArray();
@@ -66,6 +56,6 @@ public class DAO {
                 return result.toString();
             }
         };
-        requestQueue.add(request);
+        request.execute();
     }
 }

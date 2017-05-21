@@ -14,26 +14,23 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import javax.inject.Inject;
-
-import bepoland.piotr.com.bepolandtest.App;
+import bepoland.piotr.com.bepolandtest.BaseFragment;
 import bepoland.piotr.com.bepolandtest.R;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 
 /**
  * Created by piotr on 20/05/17.
  */
-public class MapFragment extends Fragment implements MapContract.View {
+public class MapFragment extends BaseFragment implements MapContract.View {
 
     private MapView mapView;
     private GoogleMap gMap;
-    @Inject
-    MapPresenter presenter;
+    private MapPresenter presenter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerMapComponent.builder().appComponent(((App) getActivity().getApplication())
-                .getAppComponent()).mapModule(new MapModule(this)).build().inject(this);
+        presenter = new MapPresenter(this,getMyApplication().provideGeocoder(),getMyApplication().provideDao(),getMyApplication().provideDatabaseHelper());
+
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {

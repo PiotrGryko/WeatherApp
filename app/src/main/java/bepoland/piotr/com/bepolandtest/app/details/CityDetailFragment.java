@@ -10,9 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
-import bepoland.piotr.com.bepolandtest.App;
 import bepoland.piotr.com.bepolandtest.BaseFragment;
 import bepoland.piotr.com.bepolandtest.R;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
@@ -27,14 +24,12 @@ import bepoland.piotr.com.bepolandtest.databinding.WeatherPanelBinding;
 public class CityDetailFragment extends BaseFragment implements CityDetailContract.View {
 
     private FragmentDetailBinding fragmentDetailBinding;
-    @Inject
-    CityDetailPresenter cityDetailPresenter;
+    private CityDetailPresenter cityDetailPresenter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerCityDetailComponent.builder().appComponent(((App) getActivity().getApplication())
-                .getAppComponent()).cityDetailModule(new CityDetailModule(this)).build().inject
-                (this);
+        cityDetailPresenter = new CityDetailPresenter(getMyApplication().provideDao(),this);
+
     }
 
     @Override

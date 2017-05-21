@@ -15,12 +15,13 @@
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="10dp">
 
         <ImageView
-            android:src="@mipmap/ic_launcher"
             android:id="@+id/iv_profile"
+            android:scaleType="centerCrop"
             android:layout_width="50dp"
+            app:imageUrl="@{city.imageUrl}"
             android:layout_height="50dp"/>
 
         <TextView

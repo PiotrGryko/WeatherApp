@@ -42,10 +42,7 @@ public class CityListPresenter implements CityListContract.Presenter {
             ModelCity[] result = new ModelCity[array.length()];
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.getJSONObject(i);
-                double lat = object.getDouble("lat");
-                double lon = object.getDouble("lon");
-                String name = object.has("name")?object.getString("name"):"";
-                result[i] = new ModelCity(new LatLng(lat, lon), name);
+                result[i] = ModelCity.fromJson(object.toString());
             }
             view.publishData(result);
         } catch (JSONException e) {

@@ -10,11 +10,13 @@ import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 public interface CityDetailContract {
 
     public interface Presenter {
-        public void loadData(ModelCity city);
+        public void loadForecast(ModelCity city);
     }
 
     public interface View {
-        public void publishData(ModelWeather weather);
+        public void publishData(ModelWeather[] weather);
+        public void forecastLoaded();
+        public void forecastError();
     }
 
 }

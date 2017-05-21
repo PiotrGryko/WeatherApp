@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.transition.Fade;
 import android.util.Log;
@@ -53,9 +54,13 @@ public class CityListFragment extends BaseFragment implements CityListContract.V
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentListBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        fragmentListBinding.recyclerView.setLayoutManager(layoutManager);
         fragmentListBinding.recyclerView.setHasFixedSize(true);
         fragmentListBinding.recyclerView.setAdapter(adapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(fragmentListBinding.recyclerView.getContext(), layoutManager.getOrientation());
+        fragmentListBinding.recyclerView.addItemDecoration(dividerItemDecoration);
         adapter.setOnItemClickListener(new CityListAdapter.OnCityClickListener() {
 
             @Override
@@ -71,7 +76,6 @@ public class CityListFragment extends BaseFragment implements CityListContract.V
 
     @Override
     public void publishData(ModelCity[] data) {
-        Log.d("XXX", "publish data");
         adapter.setData(data);
         adapter.notifyDataSetChanged();
     }
@@ -79,7 +83,7 @@ public class CityListFragment extends BaseFragment implements CityListContract.V
     @Override
     public void showDetails(ModelCity city, ImageView image) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("city", city);
+        bundle.putString("city", city.toJson());
         CityDetailFragment fragment = new CityDetailFragment();
         fragment.setArguments(bundle);
         getMainActivity().replaceFragmentWithTransition(fragment, image, "test");

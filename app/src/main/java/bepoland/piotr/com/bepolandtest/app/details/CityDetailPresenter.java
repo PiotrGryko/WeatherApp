@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.model.LatLng;
 
 import javax.inject.Inject;
 
@@ -27,12 +28,13 @@ public class CityDetailPresenter implements CityDetailContract.Presenter {
     }
 
     @Override
-    public void loadData(ModelCity city) {
-        dao.loadWeather(city.getLatLng(), new Response.Listener<ModelWeather>() {
+    public void loadForecast(ModelCity city) {
+        dao.loadForecast(new LatLng(city.getLat(), city.getLon()), new Response.Listener<ModelWeather[]>() {
 
             @Override
-            public void onResponse(ModelWeather response) {
-                Log.d("xxx","result ");
+            public void onResponse(ModelWeather[] response) {
+                Log.d("XXX","result "+response.toString());
+                contractView.forecastLoaded();
                 contractView.publishData(response);
             }
         }, new Response.ErrorListener() {
@@ -40,6 +42,7 @@ public class CityDetailPresenter implements CityDetailContract.Presenter {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("XXX",error.toString());
+                contractView.forecastError();
             }
         });
 

@@ -17,6 +17,8 @@ public interface MapContract {
     }
     public interface View
     {
+        void locationAdded();
+        void locationError();
         void publishData(ModelCity[] data);
     }
 

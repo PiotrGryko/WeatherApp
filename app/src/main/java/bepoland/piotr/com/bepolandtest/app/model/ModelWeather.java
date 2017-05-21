@@ -7,6 +7,10 @@ import android.widget.ImageView;
 import com.google.gson.annotations.SerializedName;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import bepoland.piotr.com.bepolandtest.R;
 
 /**
@@ -14,6 +18,8 @@ import bepoland.piotr.com.bepolandtest.R;
  */
 public class ModelWeather {
 
+    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale
+            .getDefault());
     @SerializedName("id")
     int id;
     @SerializedName("main")
@@ -37,21 +43,66 @@ public class ModelWeather {
     @SerializedName("grnd_level")
     float grnd_level;
     @SerializedName("speed")
-    float wind_speed;
+    float windSpeed;
     @SerializedName("sunrise")
     long sunrise;
     @SerializedName("sunset")
     long sunset;
+    @SerializedName("dt")
+    long date;
+
+    public String getDescirption() {
+        return descirption;
+    }
+
+    public String getMinTemperature() {
+        return Float.toString(temp_min);
+    }
+
+    public String getMaxTemperature() {
+        return Float.toString(temp_max);
+    }
+
+    public String getTemperature() {
+        return Float.toString(temp);
+    }
+
+    public String getPressure() {
+        return Float.toString(pressure);
+    }
+
+    public String getHumidity() {
+        return Float.toString(humidity);
+    }
+
+    public String getSeaLevel() {
+        return Float.toString(sea_level);
+    }
+
+    public String getWindSpeed() {
+        return Float.toString(windSpeed);
+    }
+
+    public String getSunsetDate() {
+        return sdf.format(new Date(sunset * 1000L));
+    }
+
+    public String getSunriseDate() {
+        return sdf.format(new Date(sunrise * 1000L));
+    }
+
+    public String getDate() {
+        return sdf.format(new Date(date * 1000L));
+    }
 
     public String getImageUrl() {
-        Log.d("XXX","get image url ");
         return "http://openweathermap.org/img/w/" + imageUrl + ".png";
     }
 
     @BindingAdapter("imageUrl")
     public static void setImageUrl(ImageView view, String imageUrl) {
-        Log.d("XXX","set image url "+imageUrl);
-
+        if (imageUrl == null || imageUrl.equals(""))
+            return;
         Picasso.with(view.getContext())
                 .load(imageUrl)
                 .into(view);

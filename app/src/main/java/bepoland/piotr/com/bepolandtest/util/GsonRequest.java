@@ -88,7 +88,6 @@ public class GsonRequest<T> extends Request<T> {
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
             json = deserialize(json);
-            Log.d("XXX", "deserialized data " + json);
             return Response.success(
                     gson.fromJson(json, clazz),
                     HttpHeaderParser.parseCacheHeaders(response));

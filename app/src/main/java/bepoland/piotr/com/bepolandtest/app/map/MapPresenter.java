@@ -5,6 +5,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -18,6 +20,8 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
+import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
+import bepoland.piotr.com.bepolandtest.util.DAO;
 
 /**
  * Created by piotr on 20/05/17.
@@ -27,18 +31,19 @@ public class MapPresenter implements MapContract.Presenter {
     private final MapContract.View view;
     private final SharedPreferences sharedPreferences;
     private final Geocoder geocoder;
+    private final DAO dao;
 
     @Inject
     public MapPresenter(MapContract.View view, SharedPreferences sharedPreferences, Geocoder
-            geocoder) {
+            geocoder, DAO dao) {
         this.view = view;
         this.sharedPreferences = sharedPreferences;
         this.geocoder = geocoder;
+        this.dao = dao;
     }
 
     @Override
     public void addLocation(LatLng position) {
-        Log.d("XXX", "add location " + position.toString() + " " + sharedPreferences);
         String cityName = "";
         try {
             List<Address> result = geocoder.getFromLocation(position.latitude, position
@@ -46,24 +51,42 @@ public class MapPresenter implements MapContract.Presenter {
             Address address = result.get(0);
             if (address != null) {
                 cityName = address.getLocality();
-                Log.d("XXX", "city " + cityName);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String data = sharedPreferences.getString("data", "[]");
-        try {
-            JSONArray array = new JSONArray(data);
-            JSONObject object = new JSONObject();
-            object.put("lat", position.latitude);
-            object.put("lon", position.longitude);
-            object.put("name",cityName);
-            array.put(object);
-            sharedPreferences.edit().putString("data", array.toString()).commit();
-            Log.d("XXX", "data saved " + array.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        final ModelCity city = new ModelCity(position, cityName);
+        dao.loadWeather(position, new Response.Listener<ModelWeather>() {
+
+            @Override
+            public void onResponse(ModelWeather response) {
+                city.setWeather(response);
+                view.locationAdded();
+                String data = sharedPreferences.getString("data", "[]");
+                JSONArray array = null;
+                try {
+                    array = new JSONArray(data);
+                    array.put(new JSONObject(city.toJson()));
+                    sharedPreferences.edit().putString("data", array.toString()).commit();
+
+                    ModelCity[] result = new ModelCity[array.length()];
+                    for(int i=0;i<array.length();i++)
+                    {
+                        result[i]=ModelCity.fromJson(array.getJSONObject(i).toString());
+
+                    }
+                    view.publishData(result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                view.locationError();
+            }
+        });
     }
 
     @Override
@@ -74,10 +97,7 @@ public class MapPresenter implements MapContract.Presenter {
             ModelCity[] result = new ModelCity[array.length()];
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.getJSONObject(i);
-                double lat = object.getDouble("lat");
-                double lon = object.getDouble("lon");
-                String name = object.has("name") ? object.getString("name") : "";
-                result[i] = new ModelCity(new LatLng(lat, lon), name);
+                result[i] = ModelCity.fromJson(object.toString());
             }
             view.publishData(result);
         } catch (JSONException e) {

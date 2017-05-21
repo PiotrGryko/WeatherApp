@@ -4,14 +4,18 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.SyncStateContract;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -68,19 +72,34 @@ public class MapFragment extends Fragment implements MapContract.View {
 
             @Override
             public void onMapLongClick(LatLng latLng) {
-
                 presenter.addLocation(latLng);
-                presenter.loadData();
             }
         });
+    }
+
+
+    @Override
+    public void locationAdded() {
+        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
+                "Weater loaded.", Snackbar.LENGTH_SHORT);
+        mySnackbar.setAction("OK", null);
+        mySnackbar.show();
+    }
+
+    @Override
+    public void locationError() {
+        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
+                "Weater can`t be loaded, try again.", Snackbar.LENGTH_SHORT);
+        mySnackbar.setAction("OK", null);
+        mySnackbar.show();
     }
 
     @Override
     public void publishData(ModelCity[] data) {
         this.gMap.clear();
-
         for (int i = 0; i < data.length; i++) {
-            this.gMap.addMarker(new MarkerOptions().position(data[i].getLatLng()));
+            this.gMap.addMarker(new MarkerOptions().position(new LatLng(data[i].getLat(), data[i]
+                    .getLon())));
         }
     }
 

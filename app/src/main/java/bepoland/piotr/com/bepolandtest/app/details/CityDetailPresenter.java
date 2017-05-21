@@ -33,7 +33,6 @@ public class CityDetailPresenter implements CityDetailContract.Presenter {
 
             @Override
             public void onResponse(ModelWeather[] response) {
-                Log.d("XXX","result "+response.toString());
                 contractView.forecastLoaded();
                 contractView.publishData(response);
             }
@@ -41,7 +40,6 @@ public class CityDetailPresenter implements CityDetailContract.Presenter {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("XXX",error.toString());
                 contractView.forecastError();
             }
         });

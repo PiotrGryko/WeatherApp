@@ -8,11 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import bepoland.piotr.com.bepolandtest.app.list.CityListFragment;
 import bepoland.piotr.com.bepolandtest.app.map.MapFragment;
+import bepoland.piotr.com.bepolandtest.app.settings.FragmentSettings;
 import bepoland.piotr.com.bepolandtest.util.DetailsTransition;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         maybeInitPhoneNavigation();
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         if (savedInstanceState == null) {
             if (!isTablet()) {
                 getSupportFragmentManager().beginTransaction().add(R.id.fragments_container, new
@@ -36,10 +43,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the main_menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.action_settings: {
+                replaceFragment(new FragmentSettings(), true);
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void maybeInitPhoneNavigation() {
         if (!isTablet()) {
             tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
                 @Override
@@ -75,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
                         tabLayout.setVisibility(View.GONE);
                         toolbar.setVisibility(View.GONE);
-                        setSupportActionBar(toolbar);
                     } else {
                         tabLayout.setVisibility(View.VISIBLE);
                         toolbar.setVisibility(View.VISIBLE);

@@ -16,6 +16,7 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
+import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 import bepoland.piotr.com.bepolandtest.util.DAO;
 
@@ -25,28 +26,17 @@ import bepoland.piotr.com.bepolandtest.util.DAO;
 public class CityListPresenter implements CityListContract.Presenter {
 
     private String TAG = CityListPresenter.class.getName();
-    SharedPreferences preferences;
+    DatabaseHelper databaseHelper;
     CityListContract.View view;
 
     @Inject
-    public CityListPresenter(SharedPreferences preferences, CityListContract.View view) {
-        this.preferences = preferences;
+    public CityListPresenter(DatabaseHelper databaseHelper, CityListContract.View view) {
+        this.databaseHelper=databaseHelper;
         this.view = view;
     }
 
     @Override
     public void loadData() {
-        String data = preferences.getString("data", "[]");
-        try {
-            JSONArray array = new JSONArray(data);
-            ModelCity[] result = new ModelCity[array.length()];
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                result[i] = ModelCity.fromJson(object.toString());
-            }
-            view.publishData(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        view.publishData(databaseHelper.getCities());
     }
 }

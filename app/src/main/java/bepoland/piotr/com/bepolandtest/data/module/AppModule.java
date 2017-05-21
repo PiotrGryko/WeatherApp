@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import javax.inject.Singleton;
 
+import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import dagger.Module;
 import dagger.Provides;
 
@@ -22,16 +23,20 @@ import dagger.Provides;
 public class AppModule {
 
     Application mApplication;
-    SharedPreferences preferences;
     Geocoder geocoder;
+    DatabaseHelper databaseHelper;
 
     public AppModule(Application mApplication) {
         this.mApplication = mApplication;
-        this.preferences = PreferenceManager.getDefaultSharedPreferences(mApplication);
         this.geocoder = new Geocoder(mApplication, Locale.getDefault());
+        this.databaseHelper = new DatabaseHelper(mApplication);
 
     }
-
+    @Provides
+    @Singleton
+    DatabaseHelper provideDatabaseHelper() {
+        return databaseHelper;
+    }
     @Provides
     @Singleton
     Geocoder provideGeocoder() {
@@ -44,9 +49,4 @@ public class AppModule {
         return mApplication;
     }
 
-    @Provides
-    @Singleton
-    SharedPreferences provideSharedPreferences() {
-        return preferences;
-    }
 }

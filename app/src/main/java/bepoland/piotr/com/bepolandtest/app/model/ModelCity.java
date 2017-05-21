@@ -1,5 +1,7 @@
 package bepoland.piotr.com.bepolandtest.app.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.databinding.BindingAdapter;
 import android.util.Log;
 import android.widget.ImageView;
@@ -11,6 +13,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.Locale;
+
+import bepoland.piotr.com.bepolandtest.app.database.CitiesDatabase;
 
 /**
  * Created by piotr on 20/05/17.
@@ -32,6 +36,7 @@ public class ModelCity implements Serializable {
         this.lon = position.longitude;
         this.name = name;
     }
+
 
     public void setWeather(ModelWeather weather) {
         this.weather = weather;
@@ -81,5 +86,16 @@ public class ModelCity implements Serializable {
         Picasso.with(view.getContext())
                 .load(imageUrl)
                 .into(view);
+    }
+
+    public static ModelCity valueOf(Cursor cursor)
+    {
+        String name = cursor.getString(cursor.getColumnIndex(CitiesDatabase.City.COLUMN_NAME));
+        double lat = cursor.getDouble(cursor.getColumnIndex(CitiesDatabase.City.COLUMN_LAT));
+        double lon = cursor.getDouble(cursor.getColumnIndex(CitiesDatabase.City.COLUMN_LON));
+        ModelCity modelCity =  new ModelCity(new LatLng(lat,lon),name);
+        ModelWeather modelWeather = ModelWeather.valueOf(cursor);
+        modelCity.setWeather(modelWeather);
+        return modelCity;
     }
 }

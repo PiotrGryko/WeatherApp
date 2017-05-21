@@ -7,11 +7,6 @@ import android.support.v4.app.Fragment;
  */
 public class BaseFragment extends Fragment {
 
-    public boolean isTablet() {
-        if (getActivity() instanceof MainActivity)
-            return ((MainActivity) getActivity()).isTablet();
-        else return false;
-    }
 
     public MainActivity getMainActivity() {
         return (MainActivity)getActivity();

@@ -1,19 +1,14 @@
 package bepoland.piotr.com.bepolandtest.app.list;
 
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.transition.Fade;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import javax.inject.Inject;
 
@@ -22,9 +17,8 @@ import bepoland.piotr.com.bepolandtest.BaseFragment;
 import bepoland.piotr.com.bepolandtest.R;
 import bepoland.piotr.com.bepolandtest.app.details.CityDetailFragment;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
-import bepoland.piotr.com.bepolandtest.data.component.DaoComponent;
+import bepoland.piotr.com.bepolandtest.data.component.AppComponent;
 import bepoland.piotr.com.bepolandtest.databinding.FragmentListBinding;
-import bepoland.piotr.com.bepolandtest.util.DetailsTransition;
 
 /**
  * Created by piotr on 18/05/17.
@@ -38,8 +32,8 @@ public class CityListFragment extends BaseFragment implements CityListContract.V
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaoComponent daoComponent = ((App) getActivity().getApplication()).getDaoComponent();
-        DaggerCityListComponent.builder().daoComponent(daoComponent).cityListModule(new
+        AppComponent appComponent = ((App) getActivity().getApplication()).getAppComponent();
+        DaggerCityListComponent.builder().appComponent(appComponent).cityListModule(new
                 CityListModule(this)).build().inject(this);
         adapter = new CityListAdapter(new ModelCity[0]);
         fragmentListPresenter.loadData();

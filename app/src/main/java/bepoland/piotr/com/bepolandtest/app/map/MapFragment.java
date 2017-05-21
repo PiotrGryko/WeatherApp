@@ -1,31 +1,17 @@
 package bepoland.piotr.com.bepolandtest.app.map;
 
-import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.SyncStateContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -45,8 +31,8 @@ public class MapFragment extends Fragment implements MapContract.View {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerMapComponent.builder().daoComponent(((App) getActivity().getApplication())
-                .getDaoComponent()).mapModule(new MapModule(this)).build().inject(this);
+        DaggerMapComponent.builder().appComponent(((App) getActivity().getApplication())
+                .getAppComponent()).mapModule(new MapModule(this)).build().inject(this);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -81,7 +67,7 @@ public class MapFragment extends Fragment implements MapContract.View {
     @Override
     public void locationAdded() {
         Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
-                "Weater loaded.", Snackbar.LENGTH_SHORT);
+                "Weather loaded.", Snackbar.LENGTH_SHORT);
         mySnackbar.setAction("OK", null);
         mySnackbar.show();
     }
@@ -89,7 +75,7 @@ public class MapFragment extends Fragment implements MapContract.View {
     @Override
     public void locationError() {
         Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
-                "Weater can`t be loaded, try again.", Snackbar.LENGTH_SHORT);
+                "Weather can`t be loaded, try again.", Snackbar.LENGTH_SHORT);
         mySnackbar.setAction("OK", null);
         mySnackbar.show();
     }

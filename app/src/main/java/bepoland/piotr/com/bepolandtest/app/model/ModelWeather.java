@@ -1,9 +1,11 @@
 package bepoland.piotr.com.bepolandtest.app.model;
 
+import android.database.Cursor;
 import android.databinding.BindingAdapter;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 import com.squareup.picasso.Picasso;
 
@@ -12,6 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import bepoland.piotr.com.bepolandtest.R;
+import bepoland.piotr.com.bepolandtest.app.database.CitiesDatabase;
 
 /**
  * Created by piotr on 20/05/17.
@@ -20,10 +23,16 @@ public class ModelWeather {
 
     private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale
             .getDefault());
-    @SerializedName("id")
-    int id;
-    @SerializedName("main")
-    String main;
+
+    private ModelWeather(String descirption, String imageUrl, float temp, float pressure, float
+            humidity, float temp_max, float temp_min, float sea_level, float windSpeed, long
+            sunrise, long sunset, long date) {
+        this.descirption = descirption; this.imageUrl = imageUrl; this.temp = temp;
+        this.pressure = pressure; this.humidity = humidity; this.temp_max = temp_max;
+        this.temp_min = temp_min; this.sea_level = sea_level; this.windSpeed = windSpeed;
+        this.sunrise = sunrise; this.sunset = sunset; this.date = date;
+    }
+
     @SerializedName("description")
     String descirption;
     @SerializedName("icon")
@@ -40,8 +49,6 @@ public class ModelWeather {
     float temp_max;
     @SerializedName("sea_level")
     float sea_level;
-    @SerializedName("grnd_level")
-    float grnd_level;
     @SerializedName("speed")
     float windSpeed;
     @SerializedName("sunrise")
@@ -55,32 +62,32 @@ public class ModelWeather {
         return descirption;
     }
 
-    public String getMinTemperature() {
-        return Float.toString(temp_min);
+    public float getMinTemperature() {
+        return temp_min;
     }
 
-    public String getMaxTemperature() {
-        return Float.toString(temp_max);
+    public float getMaxTemperature() {
+        return temp_max;
     }
 
-    public String getTemperature() {
-        return Float.toString(temp);
+    public float getTemperature() {
+        return temp;
     }
 
-    public String getPressure() {
-        return Float.toString(pressure);
+    public float getPressure() {
+        return pressure;
     }
 
-    public String getHumidity() {
-        return Float.toString(humidity);
+    public float getHumidity() {
+        return humidity;
     }
 
-    public String getSeaLevel() {
-        return Float.toString(sea_level);
+    public float getSeaLevel() {
+        return sea_level;
     }
 
-    public String getWindSpeed() {
-        return Float.toString(windSpeed);
+    public float getWindSpeed() {
+        return windSpeed;
     }
 
     public String getSunsetDate() {
@@ -95,16 +102,45 @@ public class ModelWeather {
         return sdf.format(new Date(date * 1000L));
     }
 
+    public long getRawSunsetDate() {return sunset;}
+
+    public long getRawSunriseDate() {
+        return sunrise;
+    }
+
+    public long getRawDate() {
+        return date;
+    }
+
     public String getImageUrl() {
         return "http://openweathermap.org/img/w/" + imageUrl + ".png";
+    }
+    public String getRawImageUrl()
+    {
+        return imageUrl;
     }
 
     @BindingAdapter("imageUrl")
     public static void setImageUrl(ImageView view, String imageUrl) {
-        if (imageUrl == null || imageUrl.equals(""))
-            return;
-        Picasso.with(view.getContext())
-                .load(imageUrl)
-                .into(view);
+        if (imageUrl == null || imageUrl.equals("")) return;
+        Picasso.with(view.getContext()).load(imageUrl).into(view);
+    }
+
+    public static ModelWeather valueOf(Cursor cursor) {
+
+        String description = cursor.getString(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_DESCRIPTION));
+        float humidity = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_HUMIDITY));
+        String imageUrl = cursor.getString(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_IMAGE_URL));
+        float pressure = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_PRESSURE));
+        float seaLevel = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_SEA_LEVEL));
+        long sunset = cursor.getLong(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_SUNRISE));
+        long sunrise = cursor.getLong(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_SUNSET));
+        long date = cursor.getLong(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_DATE));
+        float temp = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_TEMP));
+        float tempMin = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_TEMP_MIN));
+        float tempMax = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_TEMP_MAX));
+        float windSpeed = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_WIND_SPEED));
+
+        return new ModelWeather(description, imageUrl, temp, pressure, humidity, tempMax, tempMin, seaLevel, windSpeed, sunrise, sunset, date);
     }
 }

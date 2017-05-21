@@ -9,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import javax.inject.Inject;
 
@@ -33,8 +32,8 @@ public class CityDetailFragment extends BaseFragment implements CityDetailContra
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerCityDetailComponent.builder().daoComponent(((App) getActivity().getApplication())
-                .getDaoComponent()).cityDetailModule(new CityDetailModule(this)).build().inject
+        DaggerCityDetailComponent.builder().appComponent(((App) getActivity().getApplication())
+                .getAppComponent()).cityDetailModule(new CityDetailModule(this)).build().inject
                 (this);
     }
 

@@ -88,7 +88,7 @@
 
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.temperature}"/>
+                    android:text="@{Float.toString(weather.temperature)}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
 
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.minTemperature}"/>
+                    android:text="@{Float.toString(weather.minTemperature)}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
 
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.maxTemperature}"/>
+                    android:text="@{Float.toString(weather.maxTemperature)}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -127,7 +127,7 @@
 
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.pressure}"/>
+                    android:text="@{Float.toString(weather.pressure)}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -140,7 +140,7 @@
 
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.humidity}"/>
+                    android:text="@{Float.toString(weather.humidity)}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.seaLevel}"/>
+                    android:text="@{Float.toString(weather.seaLevel)}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -164,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.windSpeed}"/>
+                    android:text="@{Float.toString(weather.windSpeed)}"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

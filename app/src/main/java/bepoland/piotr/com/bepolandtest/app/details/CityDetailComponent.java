@@ -1,6 +1,6 @@
 package bepoland.piotr.com.bepolandtest.app.details;
 
-import bepoland.piotr.com.bepolandtest.data.component.DaoComponent;
+import bepoland.piotr.com.bepolandtest.data.component.AppComponent;
 import bepoland.piotr.com.bepolandtest.util.CustomScope;
 import dagger.Component;
 
@@ -9,7 +9,7 @@ import dagger.Component;
  */
 
 @CustomScope
-@Component(dependencies = DaoComponent.class, modules = CityDetailModule.class)
+@Component(dependencies = AppComponent.class, modules = CityDetailModule.class)
 public interface CityDetailComponent {
     void inject(CityDetailFragment fragment);
 }

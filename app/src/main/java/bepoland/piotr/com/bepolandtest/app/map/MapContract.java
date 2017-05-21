@@ -1,6 +1,5 @@
 package bepoland.piotr.com.bepolandtest.app.map;
 
-import android.content.SharedPreferences;
 
 import com.google.android.gms.maps.model.LatLng;
 

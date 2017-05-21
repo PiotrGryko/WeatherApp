@@ -2,8 +2,8 @@ package bepoland.piotr.com.bepolandtest;
 
 import android.app.Application;
 
-import bepoland.piotr.com.bepolandtest.data.component.DaggerDaoComponent;
-import bepoland.piotr.com.bepolandtest.data.component.DaoComponent;
+import bepoland.piotr.com.bepolandtest.data.component.AppComponent;
+import bepoland.piotr.com.bepolandtest.data.component.DaggerAppComponent;
 import bepoland.piotr.com.bepolandtest.data.module.AppModule;
 import bepoland.piotr.com.bepolandtest.data.module.DaoModule;
 
@@ -13,17 +13,17 @@ import bepoland.piotr.com.bepolandtest.data.module.DaoModule;
 
 public class App extends Application {
 
-    DaoComponent daoComponent;
+    AppComponent appComponent;
     public void onCreate()
     {
         super.onCreate();
-        daoComponent = DaggerDaoComponent.builder().appModule(new AppModule(this)).daoModule(new DaoModule()).build();
+        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).daoModule(new DaoModule()).build();
     }
 
 
-    public DaoComponent getDaoComponent()
+    public AppComponent getAppComponent()
     {
-        return daoComponent;
+        return appComponent;
     }
 
 }

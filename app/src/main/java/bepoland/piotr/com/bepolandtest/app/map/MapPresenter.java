@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.util.DAO;
@@ -29,17 +30,17 @@ import bepoland.piotr.com.bepolandtest.util.DAO;
 public class MapPresenter implements MapContract.Presenter {
 
     private final MapContract.View view;
-    private final SharedPreferences sharedPreferences;
     private final Geocoder geocoder;
     private final DAO dao;
+    private final DatabaseHelper databaseHelper;
 
     @Inject
-    public MapPresenter(MapContract.View view, SharedPreferences sharedPreferences, Geocoder
-            geocoder, DAO dao) {
+    public MapPresenter(MapContract.View view,  Geocoder
+            geocoder, DAO dao,DatabaseHelper databaseHelper) {
         this.view = view;
-        this.sharedPreferences = sharedPreferences;
         this.geocoder = geocoder;
         this.dao = dao;
+        this.databaseHelper=databaseHelper;
     }
 
     @Override
@@ -62,23 +63,9 @@ public class MapPresenter implements MapContract.Presenter {
             public void onResponse(ModelWeather response) {
                 city.setWeather(response);
                 view.locationAdded();
-                String data = sharedPreferences.getString("data", "[]");
-                JSONArray array = null;
-                try {
-                    array = new JSONArray(data);
-                    array.put(new JSONObject(city.toJson()));
-                    sharedPreferences.edit().putString("data", array.toString()).commit();
+                databaseHelper.saveCity(city);
+                loadData();
 
-                    ModelCity[] result = new ModelCity[array.length()];
-                    for(int i=0;i<array.length();i++)
-                    {
-                        result[i]=ModelCity.fromJson(array.getJSONObject(i).toString());
-
-                    }
-                    view.publishData(result);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
         }, new Response.ErrorListener() {
 
@@ -91,17 +78,6 @@ public class MapPresenter implements MapContract.Presenter {
 
     @Override
     public void loadData() {
-        String data = sharedPreferences.getString("data", "[]");
-        try {
-            JSONArray array = new JSONArray(data);
-            ModelCity[] result = new ModelCity[array.length()];
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                result[i] = ModelCity.fromJson(object.toString());
-            }
-            view.publishData(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        view.publishData(databaseHelper.getCities());
     }
 }

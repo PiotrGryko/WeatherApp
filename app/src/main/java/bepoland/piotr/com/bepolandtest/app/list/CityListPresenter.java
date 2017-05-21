@@ -39,4 +39,10 @@ public class CityListPresenter implements CityListContract.Presenter {
     public void loadData() {
         view.publishData(databaseHelper.getCities());
     }
+
+    @Override
+    public void removeElement(ModelCity city) {
+        this.databaseHelper.removeCity(city);
+        //loadData();
+    }
 }

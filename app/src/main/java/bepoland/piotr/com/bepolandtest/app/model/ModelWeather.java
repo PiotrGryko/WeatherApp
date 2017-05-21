@@ -24,9 +24,10 @@ public class ModelWeather {
     private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale
             .getDefault());
 
-    private ModelWeather(String descirption, String imageUrl, float temp, float pressure, float
+    private ModelWeather(int id, String descirption, String imageUrl, float temp, float pressure, float
             humidity, float temp_max, float temp_min, float sea_level, float windSpeed, long
             sunrise, long sunset, long date) {
+        this._ID = id;
         this.descirption = descirption; this.imageUrl = imageUrl; this.temp = temp;
         this.pressure = pressure; this.humidity = humidity; this.temp_max = temp_max;
         this.temp_min = temp_min; this.sea_level = sea_level; this.windSpeed = windSpeed;
@@ -57,6 +58,13 @@ public class ModelWeather {
     long sunset;
     @SerializedName("dt")
     long date;
+
+    private int _ID;
+    public int getId()
+    {
+        return _ID;
+    }
+
 
     public String getDescirption() {
         return descirption;
@@ -129,6 +137,7 @@ public class ModelWeather {
     public static ModelWeather valueOf(Cursor cursor) {
 
         String description = cursor.getString(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_DESCRIPTION));
+        int id= cursor.getInt(cursor.getColumnIndex(CitiesDatabase.Weather._ID));
         float humidity = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_HUMIDITY));
         String imageUrl = cursor.getString(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_IMAGE_URL));
         float pressure = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_PRESSURE));
@@ -141,6 +150,6 @@ public class ModelWeather {
         float tempMax = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_TEMP_MAX));
         float windSpeed = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_WIND_SPEED));
 
-        return new ModelWeather(description, imageUrl, temp, pressure, humidity, tempMax, tempMin, seaLevel, windSpeed, sunrise, sunset, date);
+        return new ModelWeather(id,description, imageUrl, temp, pressure, humidity, tempMax, tempMin, seaLevel, windSpeed, sunrise, sunset, date);
     }
 }

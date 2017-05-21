@@ -62,8 +62,9 @@ public class MapPresenter implements MapContract.Presenter {
             @Override
             public void onResponse(ModelWeather response) {
                 city.setWeather(response);
-                view.locationAdded();
                 databaseHelper.saveCity(city);
+                view.locationAdded();
+
                 loadData();
 
             }

@@ -17,6 +17,7 @@ public interface CityListContract {
 
     interface Presenter {
         void loadData();
+        void removeElement(ModelCity city);
     }
 
 }

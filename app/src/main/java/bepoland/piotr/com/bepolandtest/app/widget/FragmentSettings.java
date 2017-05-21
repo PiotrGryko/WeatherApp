@@ -1,4 +1,4 @@
-package bepoland.piotr.com.bepolandtest.app.settings;
+package bepoland.piotr.com.bepolandtest.app.widget;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

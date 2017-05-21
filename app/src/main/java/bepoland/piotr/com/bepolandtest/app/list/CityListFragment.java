@@ -61,6 +61,11 @@ public class CityListFragment extends BaseFragment implements CityListContract.V
             public void onCityClick(ModelCity city, ImageView profile) {
                 showDetails(city, profile);
             }
+
+            @Override
+            public void onElementRemoved(ModelCity city) {
+                fragmentListPresenter.removeElement(city);
+            }
         });
         if (adapter.getItemCount() > 0)
             fragmentListBinding.tvLabel.setVisibility(View.GONE);

@@ -31,12 +31,22 @@ public class ModelCity implements Serializable {
     @SerializedName("weather")
     private ModelWeather weather;
 
+    private int _ID;
+
     public ModelCity(LatLng position, String name) {
         this.lat = position.latitude;
         this.lon = position.longitude;
         this.name = name;
     }
 
+    public void setId(int id)
+    {
+        this._ID= id;
+    }
+    public int getId()
+    {
+        return _ID;
+    }
 
     public void setWeather(ModelWeather weather) {
         this.weather = weather;
@@ -93,9 +103,12 @@ public class ModelCity implements Serializable {
         String name = cursor.getString(cursor.getColumnIndex(CitiesDatabase.City.COLUMN_NAME));
         double lat = cursor.getDouble(cursor.getColumnIndex(CitiesDatabase.City.COLUMN_LAT));
         double lon = cursor.getDouble(cursor.getColumnIndex(CitiesDatabase.City.COLUMN_LON));
+        int id = cursor.getInt(cursor.getColumnIndex(CitiesDatabase.City._ID));
+
         ModelCity modelCity =  new ModelCity(new LatLng(lat,lon),name);
         ModelWeather modelWeather = ModelWeather.valueOf(cursor);
         modelCity.setWeather(modelWeather);
+        modelCity.setId(id);
         return modelCity;
     }
 }

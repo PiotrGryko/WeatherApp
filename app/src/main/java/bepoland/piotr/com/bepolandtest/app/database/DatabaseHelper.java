@@ -104,16 +104,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long weatherId = db.insert(CitiesDatabase.Weather.TABLE_NAME, null, values);
     }
 
+    public void removeCity(ModelCity city)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(CitiesDatabase.Weather.TABLE_NAME,CitiesDatabase.Weather._ID + "=" + city.getWeather().getId(), null);
+        db.delete(CitiesDatabase.City.TABLE_NAME,CitiesDatabase.City._ID + "=" + city.getWeather().getId(), null);
+
+    }
+
 
 
     public ModelCity[] getCities() {
         SQLiteDatabase db = getReadableDatabase();
 
         String[] projection = {
+                CitiesDatabase.City.TABLE_NAME+"."+CitiesDatabase.City._ID,
                 CitiesDatabase.City.COLUMN_NAME,
                 CitiesDatabase.City.COLUMN_LAT,
                 CitiesDatabase.City.COLUMN_LON,
 
+                CitiesDatabase.Weather.TABLE_NAME+"."+CitiesDatabase.Weather._ID,
                 CitiesDatabase.Weather.COLUMN_DATE,
                 CitiesDatabase.Weather.COLUMN_DESCRIPTION,
                 CitiesDatabase.Weather.COLUMN_HUMIDITY,
@@ -149,7 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             items[index++]=ModelCity.valueOf(cursor);
         }
         cursor.close();
-        
+
 
         return items;
     }

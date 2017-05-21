@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="city"
-            type="bepoland.piotr.com.bepolandtest.app.model.ModelCity" />
+            type="bepoland.piotr.com.bepolandtest.app.model.ModelCity"/>
     </data>
 
     <LinearLayout
@@ -19,19 +19,36 @@
 
         <ImageView
             android:id="@+id/iv_profile"
-            android:scaleType="centerCrop"
             android:layout_width="50dp"
-            app:imageUrl="@{city.imageUrl}"
-            android:layout_height="50dp"/>
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{city.imageUrl}"/>
 
-        <TextView
-            android:lines="1"
-            android:id="@+id/tv_name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="@{city.name}"
-            android:textStyle="bold"></TextView>
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/btn_remove"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="5dp"
+
+                android:src="@drawable/remove"/>
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/btn_remove"
+                android:lines="1"
+                android:padding="10dp"
+                android:text="@{city.name}"
+                android:textStyle="bold"></TextView>
+
+        </RelativeLayout>
     </LinearLayout>
 
 </layout>

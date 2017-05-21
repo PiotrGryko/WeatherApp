@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -46,6 +47,7 @@ public class MapFragment extends Fragment implements MapContract.View {
                 public void onMapReady(GoogleMap googleMap) {
                     initGoogleMap(googleMap);
                     presenter.loadData();
+
                 }
             });
         }
@@ -58,6 +60,11 @@ public class MapFragment extends Fragment implements MapContract.View {
 
             @Override
             public void onMapLongClick(LatLng latLng) {
+                Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
+                        "Loading location...", Snackbar.LENGTH_SHORT);
+                Snackbar.SnackbarLayout snack_view = (Snackbar.SnackbarLayout) mySnackbar.getView();
+                snack_view.addView(new ProgressBar(getActivity()));
+                mySnackbar.show();
                 presenter.addLocation(latLng);
             }
         });
@@ -68,7 +75,6 @@ public class MapFragment extends Fragment implements MapContract.View {
     public void locationAdded() {
         Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
                 "Weather loaded.", Snackbar.LENGTH_SHORT);
-        mySnackbar.setAction("OK", null);
         mySnackbar.show();
     }
 
@@ -76,7 +82,6 @@ public class MapFragment extends Fragment implements MapContract.View {
     public void locationError() {
         Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
                 "Weather can`t be loaded, try again.", Snackbar.LENGTH_SHORT);
-        mySnackbar.setAction("OK", null);
         mySnackbar.show();
     }
 

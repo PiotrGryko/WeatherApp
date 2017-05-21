@@ -14,7 +14,8 @@ import android.view.View;
 
 import bepoland.piotr.com.bepolandtest.app.list.CityListFragment;
 import bepoland.piotr.com.bepolandtest.app.map.MapFragment;
-import bepoland.piotr.com.bepolandtest.app.settings.FragmentSettings;
+import bepoland.piotr.com.bepolandtest.app.widget.FragmentHelp;
+import bepoland.piotr.com.bepolandtest.app.widget.FragmentSettings;
 import bepoland.piotr.com.bepolandtest.util.DetailsTransition;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
         {
             case R.id.action_settings: {
                 replaceFragment(new FragmentSettings(), true);
+                return true;
+            }
+            case R.id.action_help: {
+                replaceFragment(new FragmentHelp(), true);
                 return true;
             }
         }

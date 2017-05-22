@@ -27,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         maybeInitPhoneNavigation();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         if (savedInstanceState == null) {
             if (!isTablet()) {
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the main_menu; this adds items to the action bar if it is present.
@@ -57,8 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.action_settings: {
                 replaceFragment(new FragmentSettings(), true);
                 return true;
@@ -73,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void maybeInitPhoneNavigation() {
+
         if (!isTablet()) {
             tabLayout = (TabLayout) findViewById(R.id.tab_layout);
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
+
                     int position = tab.getPosition();
                     switch (position) {
                         case 0: {
@@ -94,10 +94,12 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
+
                 }
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
+
                 }
             });
             getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager
@@ -105,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onBackStackChanged() {
+
                     int count = getSupportFragmentManager().getBackStackEntryCount();
                     if (count > 0) {
 
@@ -114,20 +117,16 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.setVisibility(View.VISIBLE);
                         toolbar.setVisibility(View.VISIBLE);
                     }
-
                 }
             });
         }
 
-        ActivityCompat.requestPermissions(this,
-                              new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                               123);
-
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission
+                .ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 123);
     }
 
-
-
     public void replaceFragmentWithTransition(Fragment fragment, View view, String transitionName) {
+
         Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragments_container);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fragment.setSharedElementEnterTransition(new DetailsTransition());
@@ -137,15 +136,13 @@ public class MainActivity extends AppCompatActivity {
             fragment.setAllowReturnTransitionOverlap(true);
             fragment.setSharedElementReturnTransition(new DetailsTransition());
         }
-        getSupportFragmentManager()
-                .beginTransaction()
-                .addSharedElement(view, transitionName)
-                .replace(R.id.fragments_container, fragment)
-                .addToBackStack(null)
+        getSupportFragmentManager().beginTransaction().addSharedElement(view, transitionName)
+                .replace(R.id.fragments_container, fragment).addToBackStack(null)
                 .commitAllowingStateLoss();
     }
 
     public void replaceFragment(Fragment fragment, boolean backstack) {
+
         if (backstack) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragments_container,
                     fragment).addToBackStack(null).commitAllowingStateLoss();
@@ -156,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isTablet() {
+
         return getResources().getBoolean(R.bool.isTablet);
     }
 }

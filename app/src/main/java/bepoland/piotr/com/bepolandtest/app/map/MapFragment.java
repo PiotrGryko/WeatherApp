@@ -8,6 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,12 +29,13 @@ import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 /**
  * Created by piotr on 20/05/17.
  */
-public class MapFragment extends Fragment implements MapContract.View {
+public class MapFragment extends Fragment implements MapContract.View, PlaceSelectionListener {
 
     private MapView mapView;
     private GoogleMap gMap;
     @Inject
     MapPresenter presenter;
+    private SupportPlaceAutocompleteFragment autocompleteFragment;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +45,7 @@ public class MapFragment extends Fragment implements MapContract.View {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_map, parent, false);
+        autocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.place_fragment);
         mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         if (mapView != null) {
@@ -47,6 +55,7 @@ public class MapFragment extends Fragment implements MapContract.View {
                 public void onMapReady(GoogleMap googleMap) {
                     initGoogleMap(googleMap);
                     presenter.loadData();
+                    autocompleteFragment.setOnPlaceSelectedListener(MapFragment.this);
 
                 }
             });
@@ -70,6 +79,16 @@ public class MapFragment extends Fragment implements MapContract.View {
         });
     }
 
+    @Override
+    public void onPlaceSelected(Place place) {
+        presenter.addLocation(place.getLatLng());
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 17));
+
+    }
+
+    @Override
+    public void onError(Status status) {
+    }
 
     @Override
     public void locationAdded() {

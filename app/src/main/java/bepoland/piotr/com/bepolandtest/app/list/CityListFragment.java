@@ -23,7 +23,7 @@ import bepoland.piotr.com.bepolandtest.databinding.FragmentListBinding;
 /**
  * Created by piotr on 18/05/17.
  */
-public class CityListFragment extends BaseFragment implements CityListContract.View {
+public class CityListFragment extends BaseFragment implements CityListContract.View  {
 
     @Inject
     CityListPresenter fragmentListPresenter;

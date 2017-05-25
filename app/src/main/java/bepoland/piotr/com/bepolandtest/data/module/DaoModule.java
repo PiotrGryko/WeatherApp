@@ -8,13 +8,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import bepoland.piotr.com.bepolandtest.util.DAO;
+import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
+import bepoland.piotr.com.bepolandtest.util.WeatherApi;
+import bepoland.piotr.com.bepolandtest.util.WeatherResponseDeserializer;
 import dagger.Module;
 import dagger.Provides;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by piotr on 10/05/17.
@@ -26,21 +32,6 @@ import dagger.Provides;
 public class DaoModule {
 
 
-    @Provides
-    @Singleton
-    Cache provideCache(Application application) {
-        Cache cache = new DiskBasedCache(application.getCacheDir(), 1024 * 1024); // 1MB cap
-        return cache;
-    }
-
-    @Provides
-    @Singleton
-    RequestQueue provideRequestQueue(Cache cache) {
-        Network network = new BasicNetwork(new HurlStack());
-        RequestQueue mRequestQueue = new RequestQueue(cache, network);
-        mRequestQueue.start();
-        return mRequestQueue;
-    }
 
 
     @Provides
@@ -51,8 +42,21 @@ public class DaoModule {
 
     @Provides
     @Singleton
-    DAO provideDAO(RequestQueue requestQueue, @Named("baseUrl") String baseUrl) {
-        return new DAO(requestQueue, baseUrl);
+    WeatherApi provideWeatherApi(@Named("baseUrl") String baseUrl) {
+
+        Gson gson = new GsonBuilder().registerTypeAdapter(ModelWeather.class,new WeatherResponseDeserializer.WeatherObjectDeserializer())
+                .registerTypeAdapter(ModelWeather[].class, new WeatherResponseDeserializer.WeatherArrayDeserializer())
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+
+        return retrofit.create(WeatherApi.class);
     }
 
 

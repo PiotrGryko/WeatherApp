@@ -1,28 +1,23 @@
 package bepoland.piotr.com.bepolandtest.app.map;
 
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
-import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
-import bepoland.piotr.com.bepolandtest.util.DAO;
+import bepoland.piotr.com.bepolandtest.util.WeatherApi;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by piotr on 20/05/17.
@@ -31,15 +26,15 @@ public class MapPresenter implements MapContract.Presenter {
 
     private final MapContract.View view;
     private final Geocoder geocoder;
-    private final DAO dao;
+    private final WeatherApi weatherApi;
     private final DatabaseHelper databaseHelper;
 
     @Inject
-    public MapPresenter(MapContract.View view,  Geocoder
-            geocoder, DAO dao,DatabaseHelper databaseHelper) {
+    public MapPresenter(MapContract.View view, Geocoder
+            geocoder, WeatherApi weatherApi, DatabaseHelper databaseHelper) {
         this.view = view;
         this.geocoder = geocoder;
-        this.dao = dao;
+        this.weatherApi=weatherApi;
         this.databaseHelper=databaseHelper;
     }
 
@@ -57,24 +52,23 @@ public class MapPresenter implements MapContract.Presenter {
             e.printStackTrace();
         }
         final ModelCity city = new ModelCity(position, cityName);
-        dao.loadWeather(position, new Response.Listener<ModelWeather>() {
+
+        weatherApi.getWeather(position.latitude,position.longitude,"c6e381d8c7ff98f0fee43775817cf6ad").enqueue(new Callback<ModelWeather>() {
 
             @Override
-            public void onResponse(ModelWeather response) {
-                city.setWeather(response);
+            public void onResponse(Call<ModelWeather> call, retrofit2.Response<ModelWeather> response) {
+                city.setWeather(response.body());
                 databaseHelper.saveCity(city);
                 view.locationAdded();
-
                 loadData();
-
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(Call<ModelWeather> call, Throwable t) {
                 view.locationError();
             }
         });
+
     }
 
     @Override

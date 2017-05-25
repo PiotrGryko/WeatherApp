@@ -20,7 +20,6 @@ import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.data.module.AppModule;
-import bepoland.piotr.com.bepolandtest.util.DAO;
 
 import static org.junit.Assert.fail;
 

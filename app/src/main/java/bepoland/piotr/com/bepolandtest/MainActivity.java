@@ -10,15 +10,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+
 import bepoland.piotr.com.bepolandtest.app.list.CityListFragment;
 import bepoland.piotr.com.bepolandtest.app.map.MapFragment;
+import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.app.widget.FragmentHelp;
 import bepoland.piotr.com.bepolandtest.app.widget.FragmentSettings;
 import bepoland.piotr.com.bepolandtest.util.DetailsTransition;
+import bepoland.piotr.com.bepolandtest.util.WeatherApi;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},
                 123);
+
+
     }
 
 
@@ -159,4 +168,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean isTablet() {
         return getResources().getBoolean(R.bool.isTablet);
     }
+
+
 }

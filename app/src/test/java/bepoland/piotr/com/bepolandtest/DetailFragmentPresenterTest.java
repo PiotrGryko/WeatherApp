@@ -14,7 +14,6 @@ import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.details.CityDetailContract;
 import bepoland.piotr.com.bepolandtest.app.details.CityDetailPresenter;
-import bepoland.piotr.com.bepolandtest.util.DAO;
 
 import static junit.framework.Assert.assertNotNull;
 

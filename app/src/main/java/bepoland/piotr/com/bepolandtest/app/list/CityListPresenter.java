@@ -1,24 +1,9 @@
 package bepoland.piotr.com.bepolandtest.app.list;
 
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.android.gms.maps.model.LatLng;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
-import bepoland.piotr.com.bepolandtest.util.DAO;
 
 /**
  * Created by piotr on 12/05/17.
@@ -43,6 +28,5 @@ public class CityListPresenter implements CityListContract.Presenter {
     @Override
     public void removeElement(ModelCity city) {
         this.databaseHelper.removeCity(city);
-        //loadData();
     }
 }

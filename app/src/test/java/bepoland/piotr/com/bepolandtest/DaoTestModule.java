@@ -23,9 +23,7 @@ import java.util.concurrent.Executors;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import bepoland.piotr.com.bepolandtest.data.module.AppModule;
 import bepoland.piotr.com.bepolandtest.data.module.DaoModule;
-import bepoland.piotr.com.bepolandtest.util.DAO;
 import dagger.Module;
 import dagger.Provides;
 

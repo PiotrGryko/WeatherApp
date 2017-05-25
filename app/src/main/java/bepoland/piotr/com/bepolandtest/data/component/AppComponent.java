@@ -1,6 +1,5 @@
 package bepoland.piotr.com.bepolandtest.data.component;
 
-import android.content.SharedPreferences;
 import android.location.Geocoder;
 
 import javax.inject.Singleton;
@@ -8,7 +7,7 @@ import javax.inject.Singleton;
 import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import bepoland.piotr.com.bepolandtest.data.module.AppModule;
 import bepoland.piotr.com.bepolandtest.data.module.DaoModule;
-import bepoland.piotr.com.bepolandtest.util.DAO;
+import bepoland.piotr.com.bepolandtest.util.WeatherApi;
 import dagger.Component;
 
 /**
@@ -22,7 +21,7 @@ public interface AppComponent {
     //dont use base classes
     //void inject(MainActivity activity);
     //DAO needs to be exposed for CityListComponent
-    DAO dao();
+    WeatherApi weatherApi();
     Geocoder geocoder();
     DatabaseHelper databaseHelper();
 

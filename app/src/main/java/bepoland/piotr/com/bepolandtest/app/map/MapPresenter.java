@@ -3,8 +3,7 @@ package bepoland.piotr.com.bepolandtest.app.map;
 import android.location.Address;
 import android.location.Geocoder;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;

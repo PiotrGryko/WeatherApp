@@ -1,13 +1,5 @@
 package bepoland.piotr.com.bepolandtest.data.module;
 
-import android.app.Application;
-
-import com.android.volley.Cache;
-import com.android.volley.Network;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

@@ -1,10 +1,8 @@
 package bepoland.piotr.com.bepolandtest.util;
 
-import bepoland.piotr.com.bepolandtest.app.database.CitiesDatabase;
 import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**

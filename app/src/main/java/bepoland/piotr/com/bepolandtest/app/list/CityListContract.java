@@ -12,6 +12,7 @@ public interface CityListContract {
 
     interface View {
         void publishData(ModelCity[] cities);
+        void elementRemoved(ModelCity city);
         void showDetails(ModelCity city, ImageView image);
     }
 

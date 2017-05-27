@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.date}"/>
+                    android:text="@{weather.formattedDate}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.sunriseDate}"/>
+                    android:text="@{weather.formattedSunrise}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="5dp"
-                    android:text="@{weather.sunsetDate}"/>
+                    android:text="@{weather.formattedSunset}"/>
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import bepoland.piotr.com.bepolandtest.data.module.DaoModule;
+import bepoland.piotr.com.bepolandtest.data.module.RetrofitModule;
 import dagger.Module;
 import dagger.Provides;
 
@@ -34,7 +34,7 @@ import dagger.Provides;
  */
 
 @Module
-public class DaoTestModule extends DaoModule{
+public class DaoTestModule extends RetrofitModule {
 
 
     private String mockResponse = "{\"coord\":{\"lon\":0,\"lat\":0},\"weather\":[{\"id\":803," +

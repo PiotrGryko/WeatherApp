@@ -1,8 +1,10 @@
 package bepoland.piotr.com.bepolandtest.app.list;
 
+import android.util.Log;
+
 import javax.inject.Inject;
 
-import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
+import bepoland.piotr.com.bepolandtest.app.database.CitiesRoomHelper;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 
 /**
@@ -11,22 +13,38 @@ import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
 public class CityListPresenter implements CityListContract.Presenter {
 
     private String TAG = CityListPresenter.class.getName();
-    DatabaseHelper databaseHelper;
+    CitiesRoomHelper citiesRoomHelper;
     CityListContract.View view;
 
     @Inject
-    public CityListPresenter(DatabaseHelper databaseHelper, CityListContract.View view) {
-        this.databaseHelper=databaseHelper;
+    public CityListPresenter(CitiesRoomHelper citiesRoomHelper,
+                             CityListContract.View view) {
+        this.citiesRoomHelper = citiesRoomHelper;
         this.view = view;
     }
 
     @Override
     public void loadData() {
-        view.publishData(databaseHelper.getCities());
+
+        citiesRoomHelper.loadData(new CitiesRoomHelper.OnOperationFinished<ModelCity[]>() {
+
+            @Override
+            public void onFinished(ModelCity[] result) {
+
+                view.publishData(result);
+            }
+        });
     }
 
     @Override
-    public void removeElement(ModelCity city) {
-        this.databaseHelper.removeCity(city);
+    public void removeElement(final ModelCity city) {
+
+        this.citiesRoomHelper.removeData(city, new CitiesRoomHelper.OnOperationFinished<Integer>() {
+
+            @Override
+            public void onFinished(Integer result) {
+                    view.elementRemoved(city);
+            }
+        });
     }
 }

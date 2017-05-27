@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
+//apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 25
@@ -38,6 +38,10 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
+    //room
+    compile "android.arch.persistence.room:runtime:1.0.0-alpha1"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha1"
+
 
 
     //dependency injection
@@ -53,8 +57,8 @@ dependencies {
     testCompile "org.robolectric:robolectric:3.3.2"
     testCompile 'org.robolectric:shadows-httpclient:3.0'
     testCompile 'org.robolectric:shadows-support-v4:3.0'
-    apt 'com.google.dagger:dagger-compiler:2.10'
-    apt 'com.android.databinding:compiler:2.3.0'
+    //apt 'com.google.dagger:dagger-compiler:2.10'
+    //apt 'com.android.databinding:compiler:2.3.0'
 
 
 

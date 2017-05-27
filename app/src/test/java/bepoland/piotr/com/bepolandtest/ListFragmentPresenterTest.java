@@ -1,7 +1,6 @@
 package bepoland.piotr.com.bepolandtest;
 
 import android.app.Application;
-import android.test.RenamingDelegatingContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import org.robolectric.annotation.Config;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
 import bepoland.piotr.com.bepolandtest.app.list.CityListContract;
 import bepoland.piotr.com.bepolandtest.app.list.CityListPresenter;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;

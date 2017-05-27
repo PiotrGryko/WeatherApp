@@ -4,9 +4,9 @@ import android.location.Geocoder;
 
 import javax.inject.Singleton;
 
-import bepoland.piotr.com.bepolandtest.app.database.DatabaseHelper;
+import bepoland.piotr.com.bepolandtest.app.database.CitiesRoomHelper;
 import bepoland.piotr.com.bepolandtest.data.module.AppModule;
-import bepoland.piotr.com.bepolandtest.data.module.DaoModule;
+import bepoland.piotr.com.bepolandtest.data.module.RetrofitModule;
 import bepoland.piotr.com.bepolandtest.util.WeatherApi;
 import dagger.Component;
 
@@ -15,7 +15,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {AppModule.class,DaoModule.class})
+@Component(modules = {AppModule.class,RetrofitModule.class})
 public interface AppComponent {
     //tell dagger that MainActivity has access to singletons
     //dont use base classes
@@ -23,6 +23,5 @@ public interface AppComponent {
     //DAO needs to be exposed for CityListComponent
     WeatherApi weatherApi();
     Geocoder geocoder();
-    DatabaseHelper databaseHelper();
-
+    CitiesRoomHelper citiesRoomHelper();
 }

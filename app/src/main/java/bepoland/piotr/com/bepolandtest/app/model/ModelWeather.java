@@ -1,11 +1,9 @@
 package bepoland.piotr.com.bepolandtest.app.model;
 
-import android.database.Cursor;
+import android.arch.persistence.room.Dao;
 import android.databinding.BindingAdapter;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 import com.squareup.picasso.Picasso;
 
@@ -13,25 +11,31 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import bepoland.piotr.com.bepolandtest.R;
-import bepoland.piotr.com.bepolandtest.app.database.CitiesDatabase;
-
 /**
  * Created by piotr on 20/05/17.
  */
+
 public class ModelWeather {
 
     private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale
             .getDefault());
 
-    private ModelWeather(int id, String descirption, String imageUrl, float temp, float pressure, float
-            humidity, float temp_max, float temp_min, float sea_level, float windSpeed, long
-            sunrise, long sunset, long date) {
-        this._ID = id;
-        this.descirption = descirption; this.imageUrl = imageUrl; this.temp = temp;
-        this.pressure = pressure; this.humidity = humidity; this.temp_max = temp_max;
-        this.temp_min = temp_min; this.sea_level = sea_level; this.windSpeed = windSpeed;
-        this.sunrise = sunrise; this.sunset = sunset; this.date = date;
+    public ModelWeather(String descirption, String imageUrl, float temperature, float pressure,
+                        float humidity, float maxTemperature, float minTemperature, float
+                                seaLevel, float windSpeed, long sunrise, long sunset, long date) {
+
+        this.descirption = descirption;
+        this.imageUrl = imageUrl;
+        this.temperature = temperature;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.maxTemperature = maxTemperature;
+        this.minTemperature = minTemperature;
+        this.seaLevel = seaLevel;
+        this.windSpeed = windSpeed;
+        this.sunrise = sunrise;
+        this.sunset = sunset;
+        this.date = date;
     }
 
     @SerializedName("description")
@@ -39,17 +43,17 @@ public class ModelWeather {
     @SerializedName("icon")
     String imageUrl;
     @SerializedName("temp")
-    float temp;
+    float temperature;
     @SerializedName("pressure")
     float pressure;
     @SerializedName("humidity")
     float humidity;
     @SerializedName("temp_min")
-    float temp_min;
+    float minTemperature;
     @SerializedName("temp_max")
-    float temp_max;
-    @SerializedName("sea_level")
-    float sea_level;
+    float maxTemperature;
+    @SerializedName("seaLevel")
+    float seaLevel;
     @SerializedName("speed")
     float windSpeed;
     @SerializedName("sunrise")
@@ -59,97 +63,87 @@ public class ModelWeather {
     @SerializedName("dt")
     long date;
 
-    private int _ID;
-    public int getId()
-    {
-        return _ID;
-    }
-
-
     public String getDescirption() {
+
         return descirption;
     }
 
     public float getMinTemperature() {
-        return temp_min;
+
+        return minTemperature;
     }
 
     public float getMaxTemperature() {
-        return temp_max;
+
+        return maxTemperature;
     }
 
     public float getTemperature() {
-        return temp;
+
+        return temperature;
     }
 
     public float getPressure() {
+
         return pressure;
     }
 
     public float getHumidity() {
+
         return humidity;
     }
 
     public float getSeaLevel() {
-        return sea_level;
+
+        return seaLevel;
     }
 
     public float getWindSpeed() {
+
         return windSpeed;
     }
 
-    public String getSunsetDate() {
+    public String getFormattedSunset() {
+
         return sdf.format(new Date(sunset * 1000L));
     }
 
-    public String getSunriseDate() {
+    public String getFormattedSunrise() {
+
         return sdf.format(new Date(sunrise * 1000L));
     }
 
-    public String getDate() {
+    public String getFormattedDate() {
+
         return sdf.format(new Date(date * 1000L));
     }
 
-    public long getRawSunsetDate() {return sunset;}
+    public long getSunset() {return sunset;}
 
-    public long getRawSunriseDate() {
+    public long getSunrise() {
+
         return sunrise;
     }
 
-    public long getRawDate() {
+    public long getDate() {
+
         return date;
     }
 
-    public String getImageUrl() {
+    public String getFormattedImageUrl() {
+
         return "http://openweathermap.org/img/w/" + imageUrl + ".png";
     }
-    public String getRawImageUrl()
-    {
+
+    public String getImageUrl() {
+
         return imageUrl;
     }
 
     @BindingAdapter("imageUrl")
     public static void setImageUrl(ImageView view, String imageUrl) {
+
         if (imageUrl == null || imageUrl.equals("")) return;
         Picasso.with(view.getContext()).load(imageUrl).into(view);
-    }
-
-    public static ModelWeather valueOf(Cursor cursor) {
-
-        String description = cursor.getString(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_DESCRIPTION));
-        int id= cursor.getInt(cursor.getColumnIndex(CitiesDatabase.Weather._ID));
-        float humidity = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_HUMIDITY));
-        String imageUrl = cursor.getString(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_IMAGE_URL));
-        float pressure = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_PRESSURE));
-        float seaLevel = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_SEA_LEVEL));
-        long sunset = cursor.getLong(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_SUNRISE));
-        long sunrise = cursor.getLong(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_SUNSET));
-        long date = cursor.getLong(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_DATE));
-        float temp = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_TEMP));
-        float tempMin = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_TEMP_MIN));
-        float tempMax = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_TEMP_MAX));
-        float windSpeed = cursor.getFloat(cursor.getColumnIndex(CitiesDatabase.Weather.COLUMN_WIND_SPEED));
-
-        return new ModelWeather(id,description, imageUrl, temp, pressure, humidity, tempMax, tempMin, seaLevel, windSpeed, sunrise, sunset, date);
     }
 }

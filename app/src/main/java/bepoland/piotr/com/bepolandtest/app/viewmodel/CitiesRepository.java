@@ -41,7 +41,7 @@ public class CitiesRepository {
         this.geocoder=geocoder;
     }
 
-    public LiveData<ModelCity[]> loadCities() {
+    public MutableLiveData<ModelCity[]> loadCities() {
 
         final MutableLiveData<ModelCity[]> cities= new MutableLiveData<>();
         citiesRoomHelper.loadData(new CitiesRoomHelper.OnOperationFinished<ModelCity[]>() {

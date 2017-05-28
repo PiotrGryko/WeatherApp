@@ -73,6 +73,7 @@ public class MapFragment extends BaseFragment implements PlaceSelectionListener 
 
                         @Override
                         public void onChanged(@Nullable ModelCity[] modelCities) {
+
                             publishData(modelCities);
                         }
                     });
@@ -95,21 +96,25 @@ public class MapFragment extends BaseFragment implements PlaceSelectionListener 
                 Snackbar.SnackbarLayout snack_view = (Snackbar.SnackbarLayout) mySnackbar.getView();
                 snack_view.addView(new ProgressBar(getActivity()));
                 mySnackbar.show();
-                citiesViewModel.addCity(latLng).observe(MapFragment.this, new Observer<ModelCity>
-                        () {
+                parseLocation(latLng);
+            }
+        });
+    }
 
-                    @Override
-                    public void onChanged(@Nullable ModelCity city) {
+    private void parseLocation(LatLng latLng) {
 
-                        if (city != null) {
-                            gMap.addMarker(new MarkerOptions().position(new LatLng(city.getLat(),
-                                    city.getLon())));
-                            locationAdded();
-                        } else {
-                            locationError();
-                        }
-                    }
-                });
+        citiesViewModel.addCity(latLng).observe(MapFragment.this, new Observer<ModelCity>() {
+
+            @Override
+            public void onChanged(@Nullable ModelCity city) {
+
+                if (city != null) {
+                    gMap.addMarker(new MarkerOptions().position(new LatLng(city.getLat(), city
+                            .getLon())));
+                    locationAdded();
+                } else {
+                    locationError();
+                }
             }
         });
     }
@@ -118,6 +123,7 @@ public class MapFragment extends BaseFragment implements PlaceSelectionListener 
     public void onPlaceSelected(Place place) {
 
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 17));
+        parseLocation(place.getLatLng());
     }
 
     @Override

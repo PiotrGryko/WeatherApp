@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,19 +18,14 @@ import javax.inject.Inject;
 
 import bepoland.piotr.com.bepolandtest.app.list.CityListFragment;
 import bepoland.piotr.com.bepolandtest.app.map.MapFragment;
-import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.app.widget.FragmentHelp;
 import bepoland.piotr.com.bepolandtest.app.widget.FragmentSettings;
 import bepoland.piotr.com.bepolandtest.util.DetailsTransition;
-import bepoland.piotr.com.bepolandtest.util.WeatherApi;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasFragmentInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 

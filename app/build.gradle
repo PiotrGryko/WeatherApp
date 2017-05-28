@@ -12,6 +12,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -42,14 +45,19 @@ dependencies {
     compile "android.arch.persistence.room:runtime:1.0.0-alpha1"
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha1"
 
+    //viewmodel livedata
+    compile "android.arch.lifecycle:runtime:1.0.0-alpha1"
+    compile "android.arch.lifecycle:extensions:1.0.0-alpha1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha1"
 
 
-    //dependency injection
-    compile 'com.google.dagger:dagger:2.10'
-    compile 'com.google.dagger:dagger-android:2.10'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.10'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
-    testProvided 'com.google.dagger:dagger-compiler:2.10'
+    // Dagger core dependencies
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11-rc2'
+    compile 'com.google.dagger:dagger:2.11-rc2'
+    // Dagger Android dependencies
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11-rc2'
+    // Use this instead if you're using support library
+    compile 'com.google.dagger:dagger-android-support:2.11-rc2'
 
     //tests
     testCompile 'junit:junit:4.12'

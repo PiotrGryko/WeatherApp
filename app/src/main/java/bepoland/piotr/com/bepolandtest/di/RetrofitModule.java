@@ -1,4 +1,4 @@
-package bepoland.piotr.com.bepolandtest.data.module;
+package bepoland.piotr.com.bepolandtest.di;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

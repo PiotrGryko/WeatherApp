@@ -1,8 +1,12 @@
 package bepoland.piotr.com.bepolandtest.app.map;
 
+import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +14,6 @@ import android.widget.ProgressBar;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,30 +25,37 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import javax.inject.Inject;
 
-import bepoland.piotr.com.bepolandtest.App;
+import bepoland.piotr.com.bepolandtest.BaseFragment;
 import bepoland.piotr.com.bepolandtest.R;
 import bepoland.piotr.com.bepolandtest.app.model.ModelCity;
+import bepoland.piotr.com.bepolandtest.app.viewmodel.CitiesViewModel;
+import dagger.android.support.AndroidSupportInjection;
 
 /**
  * Created by piotr on 20/05/17.
  */
-public class MapFragment extends Fragment implements MapContract.View, PlaceSelectionListener {
+public class MapFragment extends BaseFragment implements PlaceSelectionListener {
 
     private MapView mapView;
     private GoogleMap gMap;
+    private CitiesViewModel citiesViewModel;
+
     @Inject
-    MapPresenter presenter;
+    ViewModelProvider.Factory viewModelFactory;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        DaggerMapComponent.builder().appComponent(((App) getActivity().getApplication())
-                .getAppComponent()).mapModule(new MapModule(this)).build().inject(this);
+    @Override
+    public void onAttach(Activity activity) {
+
+        AndroidSupportInjection.inject(this);
+        super.onAttach(activity);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_map, parent, false);
-        autocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.place_fragment);
+        autocompleteFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager()
+                .findFragmentById(R.id.place_fragment);
         mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         if (mapView != null) {
@@ -53,10 +63,19 @@ public class MapFragment extends Fragment implements MapContract.View, PlaceSele
 
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
-                    initGoogleMap(googleMap);
-                    presenter.loadData();
-                    autocompleteFragment.setOnPlaceSelectedListener(MapFragment.this);
 
+                    initGoogleMap(googleMap);
+                    autocompleteFragment.setOnPlaceSelectedListener(MapFragment.this);
+                    citiesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get
+                            (CitiesViewModel.class);
+                    citiesViewModel.getCities().observe(MapFragment.this, new
+                            Observer<ModelCity[]>() {
+
+                        @Override
+                        public void onChanged(@Nullable ModelCity[] modelCities) {
+                            publishData(modelCities);
+                        }
+                    });
                 }
             });
         }
@@ -64,48 +83,65 @@ public class MapFragment extends Fragment implements MapContract.View, PlaceSele
     }
 
     private void initGoogleMap(GoogleMap googleMap) {
+
         this.gMap = googleMap;
         this.gMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
 
             @Override
             public void onMapLongClick(LatLng latLng) {
+
                 Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
                         "Loading location...", Snackbar.LENGTH_SHORT);
                 Snackbar.SnackbarLayout snack_view = (Snackbar.SnackbarLayout) mySnackbar.getView();
                 snack_view.addView(new ProgressBar(getActivity()));
                 mySnackbar.show();
-                presenter.addLocation(latLng);
+                citiesViewModel.addCity(latLng).observe(MapFragment.this, new Observer<ModelCity>
+                        () {
+
+                    @Override
+                    public void onChanged(@Nullable ModelCity city) {
+
+                        if (city != null) {
+                            gMap.addMarker(new MarkerOptions().position(new LatLng(city.getLat(),
+                                    city.getLon())));
+                            locationAdded();
+                        } else {
+                            locationError();
+                        }
+                    }
+                });
             }
         });
     }
 
     @Override
     public void onPlaceSelected(Place place) {
-        presenter.addLocation(place.getLatLng());
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 17));
 
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 17));
     }
 
     @Override
     public void onError(Status status) {
+
+        locationError();
     }
 
-    @Override
     public void locationAdded() {
-        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
-                "Weather loaded.", Snackbar.LENGTH_SHORT);
+
+        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel), "Weather "
+                + "loaded.", Snackbar.LENGTH_SHORT);
         mySnackbar.show();
     }
 
-    @Override
     public void locationError() {
-        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel),
-                "Weather can`t be loaded, try again.", Snackbar.LENGTH_SHORT);
+
+        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.parentPanel), "Weather "
+                + "can`t be loaded, try again.", Snackbar.LENGTH_SHORT);
         mySnackbar.show();
     }
 
-    @Override
     public void publishData(ModelCity[] data) {
+
         this.gMap.clear();
         for (int i = 0; i < data.length; i++) {
             this.gMap.addMarker(new MarkerOptions().position(new LatLng(data[i].getLat(), data[i]
@@ -115,24 +151,28 @@ public class MapFragment extends Fragment implements MapContract.View, PlaceSele
 
     @Override
     public void onResume() {
+
         mapView.onResume();
         super.onResume();
     }
 
     @Override
     public void onPause() {
+
         super.onPause();
         mapView.onPause();
     }
 
     @Override
     public void onDestroy() {
+
         super.onDestroy();
         mapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
+
         super.onLowMemory();
         mapView.onLowMemory();
     }

@@ -58,7 +58,7 @@ public class DaoModule {
                 return chain.proceed(request);
             }
         }).build();
-        
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)

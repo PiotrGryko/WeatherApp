@@ -44,6 +44,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
 
+ 
 
 
     //dependency injection
@@ -51,16 +52,15 @@ dependencies {
     compile 'com.google.dagger:dagger-android:2.10'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.10'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
-    testProvided 'com.google.dagger:dagger-compiler:2.10'
+    apt 'com.google.dagger:dagger-compiler:2.10'
+    apt 'com.android.databinding:compiler:2.3.0'
+
 
     //tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile "org.robolectric:robolectric:3.3.2"
-    testCompile 'org.robolectric:shadows-httpclient:3.0'
-    testCompile 'org.robolectric:shadows-support-v4:3.0'
-    apt 'com.google.dagger:dagger-compiler:2.10'
-    apt 'com.android.databinding:compiler:2.3.0'
+
+
 
 
 

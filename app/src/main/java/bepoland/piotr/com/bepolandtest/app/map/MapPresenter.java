@@ -17,6 +17,11 @@ import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.util.WeatherApi;
 import retrofit2.Call;
 import retrofit2.Callback;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by piotr on 20/05/17.
@@ -52,21 +57,38 @@ public class MapPresenter implements MapContract.Presenter {
         }
         final ModelCity city = new ModelCity(position, cityName);
 
-        weatherApi.getWeather(position.latitude,position.longitude,"c6e381d8c7ff98f0fee43775817cf6ad").enqueue(new Callback<ModelWeather>() {
+        weatherApi.getWeather(position.latitude,position.longitude)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends ModelWeather>>() {
+
+                    @Override
+                    public Observable<? extends ModelWeather> call(Throwable throwable) {
+
+                        return null;
+                    }
+                }).subscribe(new Observer<ModelWeather>() {
 
             @Override
-            public void onResponse(Call<ModelWeather> call, retrofit2.Response<ModelWeather> response) {
-                city.setWeather(response.body());
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                view.locationError();
+
+            }
+
+            @Override
+            public void onNext(ModelWeather weather) {
+                city.setWeather(weather);
                 databaseHelper.saveCity(city);
                 view.locationAdded();
                 loadData();
             }
-
-            @Override
-            public void onFailure(Call<ModelWeather> call, Throwable t) {
-                view.locationError();
-            }
         });
+
 
     }
 

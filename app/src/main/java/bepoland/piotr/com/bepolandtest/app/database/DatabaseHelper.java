@@ -69,6 +69,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void dropDatabase(SQLiteDatabase db)
+    {
+        db.execSQL(SQL_DELETE_CITIES);
+        db.execSQL(SQL_DELETE_WEATHERS);
+        db.close();
+    }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }

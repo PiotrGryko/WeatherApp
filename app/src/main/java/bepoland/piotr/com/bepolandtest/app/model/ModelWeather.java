@@ -23,6 +23,8 @@ public class ModelWeather {
 
     private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale
             .getDefault());
+    public ModelWeather()
+    {}
 
     private ModelWeather(int id, String descirption, String imageUrl, float temp, float pressure, float
             humidity, float temp_max, float temp_min, float sea_level, float windSpeed, long
@@ -33,6 +35,8 @@ public class ModelWeather {
         this.temp_min = temp_min; this.sea_level = sea_level; this.windSpeed = windSpeed;
         this.sunrise = sunrise; this.sunset = sunset; this.date = date;
     }
+
+
 
     @SerializedName("description")
     String descirption;

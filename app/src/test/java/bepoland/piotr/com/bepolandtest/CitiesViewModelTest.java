@@ -1,6 +1,7 @@
 package bepoland.piotr.com.bepolandtest;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -17,6 +18,7 @@ import bepoland.piotr.com.bepolandtest.app.model.ModelWeather;
 import bepoland.piotr.com.bepolandtest.app.viewmodel.CitiesRepository;
 import bepoland.piotr.com.bepolandtest.app.viewmodel.CitiesViewModel;
 
+import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -29,12 +31,24 @@ public class CitiesViewModelTest {
 
     private CitiesViewModel viewModel;
     private CitiesRepository repository;
+    private LiveData<ModelCity[]> citiesData = new MutableLiveData<>();
+    private LiveData<ModelCity> cityData = new MutableLiveData<>();
+    private LiveData<ModelWeather[]> forecastData = new MutableLiveData<>();
+
 
     @Before
     public void setUp()
     {
         repository = Mockito.mock(CitiesRepository.class);
         viewModel = new CitiesViewModel(repository);
+
+        Mockito.when(viewModel.addCity(Mockito.any(LatLng.class))).thenReturn(cityData);
+        Mockito.when(viewModel.removeCity(Mockito.any(ModelCity.class))).thenReturn(cityData);
+        Mockito.when(viewModel.getCities()).thenReturn(citiesData);
+        Mockito.when(viewModel.loadForecast(Mockito.any(ModelCity.class))).thenReturn(forecastData);
+
+
+
     }
 
     @Test
@@ -42,7 +56,9 @@ public class CitiesViewModelTest {
     {
         LatLng position = new LatLng(0,0);
         ArgumentCaptor<LatLng> captor = ArgumentCaptor.forClass(LatLng.class);
-        viewModel.addCity(position);
+        LiveData<ModelCity> result  = viewModel.addCity(position);
+        assertNotNull(result);
+        result.observeForever(Mockito.mock(Observer.class));
         Mockito.verify(repository).addLocation(captor.capture());
         assertThat(captor.getValue(), is(position));
     }
@@ -53,7 +69,9 @@ public class CitiesViewModelTest {
 
         ModelCity city = Mockito.mock(ModelCity.class);
         ArgumentCaptor<ModelCity> captor = ArgumentCaptor.forClass(ModelCity.class);
-        viewModel.removeCity(city);
+        LiveData<ModelCity> result = viewModel.removeCity(city);
+        assertNotNull(result);
+        result.observeForever(Mockito.mock(Observer.class));
         Mockito.verify(repository).removeElement(captor.capture());
         assertThat(captor.getValue(), is(city));
 
@@ -61,7 +79,9 @@ public class CitiesViewModelTest {
     @Test
     public void testGetCities()
     {
-        viewModel.getCities();
+        LiveData<ModelCity[]> result = viewModel.getCities();
+        assertNotNull(result);
+        result.observeForever(Mockito.mock(Observer.class));
         Mockito.verify(repository).loadCities();
 
     }
@@ -71,7 +91,9 @@ public class CitiesViewModelTest {
     {
         ModelCity city = Mockito.mock(ModelCity.class);
         ArgumentCaptor<ModelCity> captor = ArgumentCaptor.forClass(ModelCity.class);
-        viewModel.loadForecast(city);
+        LiveData<ModelWeather[]> result = viewModel.loadForecast(city);
+        assertNotNull(result);
+        result.observeForever(Mockito.mock(Observer.class));
         Mockito.verify(repository).loadForecast(captor.capture());
         assertThat(captor.getValue(), is(city));
 
